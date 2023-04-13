@@ -2,28 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import UserList from './pages/UserList';
-import Header from './components/Header';
-import User from './pages/User';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './store/store'
 import {
-  createBrowserRouter,
-  RouterProvider,
-  Outlet,
-  createRoutesFromElements,
-  Route,
   BrowserRouter
 } from "react-router-dom";
-import routes from "./routes"
 import axios from "axios"
 import { setUsers } from './store/reducers/user';
 import { setLoggedUser } from './store/reducers/auth';
-import NewUser from './pages/NewUser'
-import Login from './pages/Login'
-import GuestRoute from './routes/GuestRoute';
-import PrivateRoute from './routes/PrivateRoute';
+import { setLoading } from './store/reducers/loading';
 
 /*const Layout = () => (
   <>
@@ -68,7 +56,6 @@ async function retrieveUsers() {
   try {
     let response = await axios.get(`${url}/api/users`, { params: { page: 5 } });
     let users = response.data["hydra:member"]
-    console.log(users);
     store.dispatch(setUsers(users));
   } catch (e) {
     store.dispatch(setUsers([]));
@@ -78,18 +65,22 @@ async function retrieveUsers() {
 
 async function retrieveLoggedUser() {
   try {
-    let loggedUser = await axios.get(`${url}/api/users/1/info`, { headers: { Authorization: `Bearer ${localStorage.getItem("TOKEN")}` } })
-    console.log(loggedUser.data);
-    let user = loggedUser.data
-    console.log(user);
-    let userLogged = { nickname: user.nickname, id: user.id }
-    store.dispatch(setLoggedUser(userLogged))
+    let token = localStorage.getItem("TOKEN");
+    if(token) {
+      let loggedUser = await axios.get(`${url}/api/users/1/info`, { headers: { Authorization: `Bearer ${token}` } })
+      console.log(loggedUser.data);
+      let user = loggedUser.data
+      console.log(user);
+      let userLogged = { nickname: user.nickname, id: user.id }
+      store.dispatch(setLoggedUser(userLogged))
+    }
   } catch (e) {
+    localStorage.removeItem("TOKEN")
   }
 
 }
 
-Promise.all([retrieveLoggedUser(), retrieveUsers()]);
+Promise.all([retrieveLoggedUser(), retrieveUsers()]).finally(() => store.dispatch(setLoading(false)));
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
