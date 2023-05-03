@@ -18,27 +18,30 @@ const Layout = () => (
 const routes = () => [
   {
     element: <Layout />,
-    children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/userList",
-        element: <UserList />,
-      },
-      {
-        path: "user/:userId",
-        element: <>{PrivateRoute(<User />)}</>
-      },
-      {
-        path: "signIn",
-        element: <>{GuestRoute(<NewUser />)}</>
-      },
-      {
-        path: "logIn",
-        element: <>{GuestRoute(<Login />)}</>
-      }
+    children: [{
+      path: "*",
+      element: <p>Error</p>,
+    },
+    {
+      path: "/",
+      element: <Home />,
+    },
+    {
+      path: "/userList",
+      element: <UserList />,
+    },
+    {
+      path: "user/:userId",
+      element: <>{PrivateRoute(<User />)}</>
+    },
+    {
+      path: "signIn",
+      element: <>{GuestRoute(<NewUser />)}</>
+    },
+    {
+      path: "logIn",
+      element: <>{GuestRoute(<Login />)}</>
+    }
     ]
   }
 ];

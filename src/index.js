@@ -12,7 +12,7 @@ import axios from "axios"
 import { setUsers } from './store/reducers/user';
 import { setLoggedUser } from './store/reducers/auth';
 import { setLoading } from './store/reducers/loading';
-
+import config from "./config"
 /*const Layout = () => (
   <>
     <Header />
@@ -50,7 +50,7 @@ import { setLoading } from './store/reducers/loading';
   }
 ]);*/
 
-const url = "http://82.65.6.187:8002"
+const url = config.url
 
 async function retrieveUsers() {
   try {
@@ -67,7 +67,7 @@ async function retrieveLoggedUser() {
   try {
     let token = localStorage.getItem("TOKEN");
     if(token) {
-      let loggedUser = await axios.get(`${url}/api/users/1/info`, { headers: { Authorization: `Bearer ${token}` } })
+      let loggedUser = await axios.get(`${url}/api/users/105/info`, { headers: { Authorization: `Bearer ${token}` } })
       console.log(loggedUser.data);
       let user = loggedUser.data
       console.log(user);

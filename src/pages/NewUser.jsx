@@ -2,17 +2,17 @@ import { Button, TextField } from '@mui/material';
 
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
+import config from "../config"
 
 function NewUser() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
-  const url = "http://82.65.6.187:8002/api/users"
+  const url = `${config.url}/api/users`
 
   const onCreate = async () => {
     try {
       let payload = { email, plainPassword: password, nickname };
-      console.log(payload);
       let user = await axios.post(
         url,
         payload,

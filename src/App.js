@@ -1,11 +1,22 @@
 import routes from './routes';
 import { useRoutes } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import socketIOClient from "socket.io-client";
+import { useDispatch } from 'react-redux';
+import {setUsersConnected} from "./store/reducers/user.js"
+
+const ENDPOINT = "http://127.0.0.1:4001";
 
 export default function App() {
-  const loggedUser = useSelector(state => state.auth.loggedUser);
-  const routing = useRoutes(routes(loggedUser));
+  const dispatch = useDispatch()
+  useEffect(() => {
+    const socket = socketIOClient(ENDPOINT);
+     socket.on('new user list', data => {
+      dispatch(setUsersConnected(data));
+     });
+  }, []);
 
+  const routing = useRoutes(routes());
   return (
     <>
       {routing}
